@@ -18,7 +18,7 @@ const Portfolio = () => {
       title: "Smart Healthcare Management System",
       category: "Healthcare Tech",
       description: "Complete hospital management solution with patient tracking, appointment scheduling, and AI-assisted diagnosis support.",
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=2070&q=80",
       technologies: ["React", "Node.js", "MongoDB", "AI/ML", "Socket.io"],
       metrics: { users: "5K+", growth: "250%", rating: 4.8 },
       featured: true
@@ -38,7 +38,7 @@ const Portfolio = () => {
       title: "E-commerce Automation Platform",
       category: "E-commerce",
       description: "Automated inventory management and order processing system with AI-powered demand forecasting.",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+      image: "https://images.unsplash.com/photo-1581093588401-9d09c5f8f2b8?auto=format&fit=crop&w=2340&q=80",
       technologies: ["Vue.js", "Python", "Redis", "Microservices", "Docker"],
       metrics: { users: "15K+", growth: "350%", rating: 4.6 },
       featured: false
@@ -58,12 +58,25 @@ const Portfolio = () => {
       title: "Educational AI Tutor Platform",
       category: "EdTech",
       description: "Personalized learning platform with AI tutors, adaptive assessments, and progress tracking for students.",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2071&q=80",
       technologies: ["React", "Python", "NLP", "GraphQL", "AWS Lambda"],
       metrics: { users: "30K+", growth: "500%", rating: 4.8 },
       featured: false
     }
   ];
+
+  const getFallbackImage = (category) => {
+    switch (category) {
+      case "Healthcare Tech":
+        return "/images/healthcare.svg";
+      case "E-commerce":
+        return "/images/ecommerce.svg";
+      case "EdTech":
+        return "/images/edtech.svg";
+      default:
+        return "/images/edtech.svg";
+    }
+  };
 
   const categories = ["All", "AI & Data Science", "Healthcare Tech", "Financial Technology", "E-commerce", "IoT & Smart Systems", "EdTech"];
   
@@ -134,6 +147,13 @@ const Portfolio = () => {
                   <img 
                     src={project.image} 
                     alt={project.title}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.dataset.fallbackApplied) return;
+                      target.dataset.fallbackApplied = "true";
+                      target.src = getFallbackImage(project.category);
+                    }}
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -218,6 +238,13 @@ const Portfolio = () => {
                   <img 
                     src={project.image} 
                     alt={project.title}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.dataset.fallbackApplied) return;
+                      target.dataset.fallbackApplied = "true";
+                      target.src = getFallbackImage(project.category);
+                    }}
                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-3 left-3">
