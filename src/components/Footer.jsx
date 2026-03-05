@@ -1,52 +1,50 @@
 import { motion } from 'framer-motion';
-import { 
-  Code, 
-  Cpu, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Linkedin, 
-  Github, 
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Github,
   Twitter,
   ArrowUp
 } from 'lucide-react';
+import { useUI } from '../context/UIContext.jsx';
 
 const Footer = () => {
+  const { t } = useUI();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const footerLinks = {
-    services: [
-      "Custom Software Development",
-      "AI & Machine Learning",
-      "Mobile App Development",
-      "Cloud Solutions",
-      "Data Engineering",
-      "Cybersecurity"
-    ],
-    company: [
-      "About Us",
-      "Our Team",
-      "Careers",
-      "Blog",
-      "Case Studies",
-      "Contact"
-    ],
-    resources: [
-      "Documentation",
-      "API Reference",
-      "Support Center",
-      "Community",
-      "Partners",
-      "Privacy Policy"
-    ]
-  };
+  const serviceLinks = [
+    'service_1_title', 'service_2_title', 'service_3_title',
+    'service_4_title', 'service_5_title', 'service_6_title'
+  ];
+
+  const companyLinks = [
+    { key: 'footer_about_us', href: '#about' },
+    { key: 'footer_our_team', href: '#about' },
+    { key: 'footer_careers', href: '#' },
+    { key: 'footer_blog', href: '#' },
+    { key: 'footer_case_studies', href: '#portfolio' },
+    { key: 'footer_contact', href: '#contact' }
+  ];
+
+  const resourceLinks = [
+    'footer_docs', 'footer_api', 'footer_support',
+    'footer_community', 'footer_partners', 'footer_privacy'
+  ];
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-dark-900 border-t border-gray-800/50 text-white relative overflow-hidden">
+      {/* Decorative line */}
+      <svg className="decorative-line absolute top-0 left-0 w-full h-full opacity-10" viewBox="0 0 1000 400" preserveAspectRatio="none">
+        <path d="M-50,200 Q250,50 500,200 T1050,100" />
+      </svg>
+
       {/* Main Footer */}
-      <div className="container mx-auto px-6 py-16">
+      <div className="container mx-auto px-6 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <motion.div
@@ -57,28 +55,23 @@ const Footer = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center space-x-2 mb-6">
-              <div className="relative">
-                <Code className="h-8 w-8 text-primary-400" />
-                <Cpu className="h-4 w-4 text-accent-400 absolute -top-1 -right-1" />
-              </div>
-              <span className="text-2xl font-bold gradient-text">ETQAN</span>
+              <span className="text-2xl font-display font-bold gradient-text">ETQAN</span>
             </div>
-            <p className="text-gray-400 mb-6 leading-relaxed">
-              Transforming businesses through innovative software solutions and AI technologies. 
-              We build the future, one line of code at a time.
+            <p className="text-gray-500 mb-6 leading-relaxed text-sm">
+              {t('footer_desc')}
             </p>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-gray-400">
-                <Mail className="h-4 w-4" />
-                <span className="text-sm">hello@etqan.dev</span>
+              <div className="flex items-center space-x-3 text-gray-500">
+                <Mail className="h-4 w-4 text-neon-400/60" />
+                <span className="text-sm">{t('contact_email_detail')}</span>
               </div>
-              <div className="flex items-center space-x-3 text-gray-400">
-                <Phone className="h-4 w-4" />
-                <span className="text-sm">+1 (555) 123-4567</span>
+              <div className="flex items-center space-x-3 text-gray-500">
+                <Phone className="h-4 w-4 text-neon-400/60" />
+                <span className="text-sm">{t('contact_phone_detail')}</span>
               </div>
-              <div className="flex items-center space-x-3 text-gray-400">
-                <MapPin className="h-4 w-4" />
-                <span className="text-sm">123 Tech Street, Digital City</span>
+              <div className="flex items-center space-x-3 text-gray-500">
+                <MapPin className="h-4 w-4 text-neon-400/60" />
+                <span className="text-sm">{t('contact_visit_detail')}</span>
               </div>
             </div>
           </motion.div>
@@ -90,15 +83,12 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h3 className="text-lg font-semibold mb-6">Services</h3>
+            <h3 className="font-display text-sm font-semibold tracking-widest uppercase text-white mb-6">{t('footer_services')}</h3>
             <ul className="space-y-3">
-              {footerLinks.services.map((service, index) => (
+              {serviceLinks.map((key, index) => (
                 <li key={index}>
-                  <a 
-                    href="#services" 
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    {service}
+                  <a href="#services" className="text-gray-500 hover:text-neon-400 transition-colors text-sm">
+                    {t(key)}
                   </a>
                 </li>
               ))}
@@ -112,15 +102,12 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="text-lg font-semibold mb-6">Company</h3>
+            <h3 className="font-display text-sm font-semibold tracking-widest uppercase text-white mb-6">{t('footer_company')}</h3>
             <ul className="space-y-3">
-              {footerLinks.company.map((item, index) => (
+              {companyLinks.map((link, index) => (
                 <li key={index}>
-                  <a 
-                    href={`#${item.toLowerCase().replace(' ', '-')}`} 
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    {item}
+                  <a href={link.href} className="text-gray-500 hover:text-neon-400 transition-colors text-sm">
+                    {t(link.key)}
                   </a>
                 </li>
               ))}
@@ -134,15 +121,12 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h3 className="text-lg font-semibold mb-6">Resources</h3>
+            <h3 className="font-display text-sm font-semibold tracking-widest uppercase text-white mb-6">{t('footer_resources')}</h3>
             <ul className="space-y-3 mb-6">
-              {footerLinks.resources.map((resource, index) => (
+              {resourceLinks.map((key, index) => (
                 <li key={index}>
-                  <a 
-                    href="#" 
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    {resource}
+                  <a href="#" className="text-gray-500 hover:text-neon-400 transition-colors text-sm">
+                    {t(key)}
                   </a>
                 </li>
               ))}
@@ -150,8 +134,8 @@ const Footer = () => {
 
             {/* Social Links */}
             <div>
-              <h4 className="text-sm font-semibold mb-3">Follow Us</h4>
-              <div className="flex space-x-3">
+              <h4 className="text-xs font-semibold tracking-widest uppercase mb-3 text-gray-400">{t('footer_follow')}</h4>
+              <div className="flex space-x-2">
                 {[
                   { icon: <Linkedin className="h-4 w-4" />, url: "#" },
                   { icon: <Github className="h-4 w-4" />, url: "#" },
@@ -160,7 +144,7 @@ const Footer = () => {
                   <motion.a
                     key={index}
                     href={social.url}
-                    className="bg-gray-800 hover:bg-primary-600 p-2 rounded-lg transition-colors"
+                    className="bg-dark-400 border border-gray-800/50 hover:border-neon-400/30 hover:text-neon-400 p-2 rounded-lg transition-all text-gray-500"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -175,7 +159,7 @@ const Footer = () => {
 
       {/* Newsletter Section */}
       <motion.div
-        className="border-t border-gray-800"
+        className="border-t border-gray-800/50"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -184,23 +168,23 @@ const Footer = () => {
         <div className="container mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="mb-4 md:mb-0">
-              <h3 className="text-lg font-semibold mb-2">Stay Updated</h3>
-              <p className="text-gray-400 text-sm">
-                Get the latest news about technology trends and our services.
+              <h3 className="font-display text-lg font-semibold mb-1">{t('footer_newsletter_title')}</h3>
+              <p className="text-gray-500 text-sm">
+                {t('footer_newsletter_desc')}
               </p>
             </div>
             <div className="flex w-full md:w-auto">
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="flex-1 md:w-64 px-4 py-2 bg-gray-800 border border-gray-700 rounded-l-lg focus:outline-none focus:border-primary-500 text-white"
+                placeholder={t('footer_newsletter_placeholder')}
+                className="flex-1 md:w-64 px-4 py-2 bg-dark-400 border border-gray-700/50 rounded-l-full focus:outline-none focus:border-neon-400/50 text-white text-sm placeholder-gray-600"
               />
               <motion.button
-                className="bg-primary-600 hover:bg-primary-700 px-6 py-2 rounded-r-lg font-medium transition-colors"
+                className="bg-neon-500 hover:bg-neon-600 text-dark-700 px-6 py-2 rounded-r-full font-medium transition-colors text-sm"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Subscribe
+                {t('footer_subscribe')}
               </motion.button>
             </div>
           </div>
@@ -208,22 +192,22 @@ const Footer = () => {
       </motion.div>
 
       {/* Bottom Footer */}
-      <div className="border-t border-gray-800">
+      <div className="border-t border-gray-800/50">
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2024 ETQAN. All rights reserved. Built with ❤️ for innovation.
+            <p className="text-gray-600 text-sm mb-4 md:mb-0">
+              {t('footer_copyright')}
             </p>
             <div className="flex items-center space-x-6">
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Terms of Service
+              <a href="#" className="text-gray-600 hover:text-neon-400 text-sm transition-colors">
+                {t('footer_terms')}
               </a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Privacy Policy
+              <a href="#" className="text-gray-600 hover:text-neon-400 text-sm transition-colors">
+                {t('footer_privacy_link')}
               </a>
               <motion.button
                 onClick={scrollToTop}
-                className="bg-gray-800 hover:bg-primary-600 p-2 rounded-lg transition-colors"
+                className="bg-dark-400 border border-gray-700/50 hover:border-neon-400/30 hover:text-neon-400 p-2 rounded-lg transition-all text-gray-500"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >

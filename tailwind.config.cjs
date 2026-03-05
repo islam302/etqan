@@ -8,7 +8,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Cairo', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'Cairo', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'Cairo', 'system-ui', 'sans-serif'],
+        serif: ['Playfair Display', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
         arab: ['Cairo', 'Tajawal', 'Noto Kufi Arabic', 'system-ui', 'sans-serif'],
       },
@@ -19,7 +21,31 @@ module.exports = {
           cream: '#FED7A5',
           rose: '#9E6752',
           mauve: '#534145',
-          night: '#20212B',
+          night: '#0d0d11',
+        },
+        neon: {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+        },
+        dark: {
+          50: '#f8f8f8',
+          100: '#e0e0e0',
+          200: '#2a2a30',
+          300: '#222228',
+          400: '#1a1a1e',
+          500: '#141418',
+          600: '#111114',
+          700: '#0d0d11',
+          800: '#0a0a0e',
+          900: '#06060a',
         },
         primary: {
           50: '#e7edf2',
@@ -59,12 +85,17 @@ module.exports = {
         },
       },
       boxShadow: {
-        'elevated': '0 10px 25px -5px rgba(0,0,0,0.2)',
+        'elevated': '0 10px 25px -5px rgba(0,0,0,0.4)',
+        'card': '0 4px 20px rgba(0,0,0,0.3)',
+        'card-hover': '0 8px 40px rgba(0,0,0,0.5)',
+        'neon': '0 0 20px rgba(74, 222, 128, 0.15)',
+        'neon-strong': '0 0 30px rgba(74, 222, 128, 0.25)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'float': 'float 6s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -75,12 +106,14 @@ module.exports = {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
-      }
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+      },
     },
   },
   plugins: [
     require('@tailwindcss/typography'),
   ],
 }
-
-

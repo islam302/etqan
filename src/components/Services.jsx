@@ -1,64 +1,60 @@
 import { motion } from 'framer-motion';
 import { useUI } from '../context/UIContext.jsx';
-import { 
-  Code2, 
-  Brain, 
-  Smartphone, 
-  Cloud, 
-  Database, 
-  Shield, 
-  Zap, 
-  Cpu,
-  Globe,
-  BarChart3,
-  Cog,
+import {
+  Code2,
+  Brain,
+  Smartphone,
+  Cloud,
+  Database,
+  Shield,
   Rocket
 } from 'lucide-react';
 
 const Services = () => {
-  const { t, locale } = useUI();
+  const { t } = useUI();
+
   const services = [
     {
       icon: <Code2 className="h-8 w-8" />,
-      title: "Custom Software Development",
-      description: "Tailored software solutions built with modern technologies to meet your specific business requirements and scale with your growth.",
-      features: ["Web Applications", "Desktop Software", "API Development", "System Integration"],
-      color: "from-blue-500 to-blue-600"
+      titleKey: 'service_1_title',
+      descKey: 'service_1_desc',
+      featureKeys: ['service_1_f1', 'service_1_f2', 'service_1_f3', 'service_1_f4'],
+      number: '01'
     },
     {
       icon: <Brain className="h-8 w-8" />,
-      title: "AI & Machine Learning",
-      description: "Leverage the power of artificial intelligence to automate processes, gain insights, and create intelligent applications.",
-      features: ["Predictive Analytics", "Natural Language Processing", "Computer Vision", "Chatbots & AI Assistants"],
-      color: "from-purple-500 to-purple-600"
+      titleKey: 'service_2_title',
+      descKey: 'service_2_desc',
+      featureKeys: ['service_2_f1', 'service_2_f2', 'service_2_f3', 'service_2_f4'],
+      number: '02'
     },
     {
       icon: <Smartphone className="h-8 w-8" />,
-      title: "Mobile App Development",
-      description: "Native and cross-platform mobile applications that deliver exceptional user experiences on iOS and Android.",
-      features: ["iOS Development", "Android Development", "React Native", "Flutter"],
-      color: "from-green-500 to-green-600"
+      titleKey: 'service_3_title',
+      descKey: 'service_3_desc',
+      featureKeys: ['service_3_f1', 'service_3_f2', 'service_3_f3', 'service_3_f4'],
+      number: '03'
     },
     {
       icon: <Cloud className="h-8 w-8" />,
-      title: "Cloud Solutions",
-      description: "Scalable cloud infrastructure and migration services to optimize performance, security, and cost-effectiveness.",
-      features: ["AWS/Azure/GCP", "Cloud Migration", "DevOps", "Microservices"],
-      color: "from-cyan-500 to-cyan-600"
+      titleKey: 'service_4_title',
+      descKey: 'service_4_desc',
+      featureKeys: ['service_4_f1', 'service_4_f2', 'service_4_f3', 'service_4_f4'],
+      number: '04'
     },
     {
       icon: <Database className="h-8 w-8" />,
-      title: "Data Engineering",
-      description: "Transform raw data into actionable insights with robust data pipelines, warehouses, and analytics solutions.",
-      features: ["Data Pipelines", "Data Warehousing", "ETL Processes", "Real-time Analytics"],
-      color: "from-orange-500 to-orange-600"
+      titleKey: 'service_5_title',
+      descKey: 'service_5_desc',
+      featureKeys: ['service_5_f1', 'service_5_f2', 'service_5_f3', 'service_5_f4'],
+      number: '05'
     },
     {
       icon: <Shield className="h-8 w-8" />,
-      title: "Cybersecurity Solutions",
-      description: "Comprehensive security services to protect your digital assets and ensure compliance with industry standards.",
-      features: ["Security Audits", "Penetration Testing", "Compliance", "Security Training"],
-      color: "from-red-500 to-red-600"
+      titleKey: 'service_6_title',
+      descKey: 'service_6_desc',
+      featureKeys: ['service_6_f1', 'service_6_f2', 'service_6_f3', 'service_6_f4'],
+      number: '06'
     }
   ];
 
@@ -86,30 +82,38 @@ const Services = () => {
   };
 
   return (
-    <section id="services" className="py-20 bg-gray-50 dark:bg-gray-900" style={{ fontFamily: locale === 'ar' ? 'Cairo, Tajawal, sans-serif' : undefined }}>
-      <div className="container mx-auto px-6">
+    <section id="services" className="py-24 bg-dark-texture relative" >
+      {/* Decorative line */}
+      <svg className="decorative-line absolute top-0 left-0 w-full h-full opacity-30" viewBox="0 0 1000 800" preserveAspectRatio="none">
+        <path d="M-50,400 Q300,200 600,500 T1050,300" />
+      </svg>
+
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Section divider */}
+        <div className="section-divider"></div>
+
+        {/* Header - "Table of Contents" style */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center space-x-2 bg-primary-100 rounded-full px-4 py-2 mb-4">
-            <Cog className="h-5 w-5 text-primary-600" />
-            <span className="text-sm font-semibold text-primary-700">Our Services</span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            {t('services_title').split(' ').slice(0, -1).join(' ')} <span className="gradient-text">{t('services_title').split(' ').slice(-1)}</span>
+          <h2 className="mb-4">
+            <span className="font-display text-4xl md:text-5xl text-gray-400 block mb-2 font-medium">{t('services_badge')}</span>
+            <span className="font-display text-5xl md:text-7xl font-bold">
+              <span className="gradient-text">{t('services_title')}</span>
+            </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            From concept to deployment, we provide end-to-end technology services 
-            that drive innovation and deliver measurable business results.
+          <p className="text-lg text-gray-500 max-w-2xl mx-auto mt-6">
+            {t('services_subtitle')}
           </p>
         </motion.div>
 
+        {/* Services Grid - Table of Contents layout */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -118,36 +122,44 @@ const Services = () => {
           {services.map((service, index) => (
             <motion.div
               key={index}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 group border border-gray-100 dark:border-gray-700 card-hover"
+              className="group relative"
               variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ x: 8 }}
             >
-              <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${service.color} text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                {service.icon}
+              {/* Large background number */}
+              <div className="section-number absolute -top-4 -left-2 select-none opacity-60">
+                {service.number}
               </div>
-              
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 transition-colors">
-                {service.title}
-              </h3>
-              
-              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                {service.description}
-              </p>
-              
-              <ul className="space-y-2">
-                {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <div className="w-1.5 h-1.5 bg-primary-500 rounded-full mr-3"></div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              
-              <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
-                <button className="text-primary-600 hover:text-primary-700 font-semibold text-sm flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
-                  <span>Learn More</span>
-                  <Rocket className="h-4 w-4" />
-                </button>
+
+              <div className="relative z-10 pt-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="text-neon-400 group-hover:text-neon-300 transition-colors">
+                    {service.icon}
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-white group-hover:text-neon-400 transition-colors tracking-wide uppercase">
+                    {t(service.titleKey)}
+                  </h3>
+                </div>
+
+                <p className="text-gray-500 mb-5 leading-relaxed text-sm">
+                  {t(service.descKey)}
+                </p>
+
+                <ul className="space-y-2">
+                  {service.featureKeys.map((featureKey, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center text-sm text-gray-400">
+                      <div className="w-1.5 h-1.5 bg-neon-400/60 rounded-full mr-3 rtl:ml-3 rtl:mr-0"></div>
+                      {t(featureKey)}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-5">
+                  <button className="text-neon-400 hover:text-neon-300 font-mono text-xs tracking-widest uppercase flex items-center space-x-2 group-hover:translate-x-2 transition-transform">
+                    <span>{t('learn_more')}</span>
+                    <Rocket className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -155,35 +167,34 @@ const Services = () => {
 
         {/* Process Section */}
         <motion.div
-          className="mt-20 text-center"
+          className="mt-24"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <h3 className="text-2xl font-bold text-gray-900 mb-8">Our Development Process</h3>
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+          <div className="section-divider"></div>
+          <h3 className="font-display text-2xl font-bold text-white text-center mb-10 tracking-wide uppercase">
+            {t('process_title')}
+          </h3>
+          <div className="flex flex-col md:flex-row justify-center items-stretch gap-6">
             {[
-              { icon: <Globe className="h-6 w-6" />, title: "Discovery", desc: "Understanding your needs" },
-              { icon: <Cog className="h-6 w-6" />, title: "Design", desc: "Creating the blueprint" },
-              { icon: <Code2 className="h-6 w-6" />, title: "Develop", desc: "Building the solution" },
-              { icon: <BarChart3 className="h-6 w-6" />, title: "Deploy", desc: "Launching your project" }
+              { titleKey: 'process_1_title', descKey: 'process_1_desc', num: '01' },
+              { titleKey: 'process_2_title', descKey: 'process_2_desc', num: '02' },
+              { titleKey: 'process_3_title', descKey: 'process_3_desc', num: '03' },
+              { titleKey: 'process_4_title', descKey: 'process_4_desc', num: '04' }
             ].map((step, index) => (
               <motion.div
                 key={index}
-                className="flex items-center space-x-4 bg-white rounded-lg p-4 shadow-md"
-                whileHover={{ scale: 1.05 }}
+                className="flex-1 portfolio-card p-6 text-center"
+                whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-primary-100 p-3 rounded-lg text-primary-600">
-                  {step.icon}
-                </div>
-                <div className="text-left">
-                  <h4 className="font-semibold text-gray-900">{step.title}</h4>
-                  <p className="text-sm text-gray-600">{step.desc}</p>
-                </div>
+                <div className="text-neon-400 font-mono text-xs mb-2">{step.num}</div>
+                <h4 className="font-display font-semibold text-white uppercase tracking-wide mb-1">{t(step.titleKey)}</h4>
+                <p className="text-sm text-gray-500">{t(step.descKey)}</p>
                 {index < 3 && (
-                  <div className="hidden md:block w-8 h-0.5 bg-gradient-to-r from-primary-300 to-primary-500 ml-4"></div>
+                  <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-8 h-px bg-gradient-to-r from-neon-400/30 to-transparent"></div>
                 )}
               </motion.div>
             ))}

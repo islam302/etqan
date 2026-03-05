@@ -1,183 +1,384 @@
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Code2, Brain, Zap } from 'lucide-react';
+import { ArrowRight, Code2, Brain, Zap, Sparkles } from 'lucide-react';
 import { useUI } from '../context/UIContext.jsx';
+import gsap from 'gsap';
 
 const Hero = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
-      }
-    }
-  };
+  const heroRef = useRef(null);
+  const logoRef = useRef(null);
+  const swooshRef = useRef(null);
+  const badgeRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const ctaRef = useRef(null);
+  const pillsRef = useRef(null);
+  const lineRef = useRef(null);
+  const leftTextRef = useRef(null);
+  const rightTextRef = useRef(null);
+  const bottomRef = useRef(null);
+  const taglineRef = useRef(null);
+  const cursorRef = useRef(null);
+  const logoMaskRef = useRef(null);
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
+  const { t } = useUI();
 
-  const { t, locale } = useUI();
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+      // Phase 1: Line draws across top
+      tl.fromTo(lineRef.current,
+        { scaleX: 0, transformOrigin: 'left center' },
+        { scaleX: 1, duration: 0.5, ease: 'power2.inOut' }
+      );
+
+      // Green dot pulses in
+      tl.fromTo('.hero-green-dot',
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.2, ease: 'back.out(3)' },
+        '-=0.2'
+      );
+
+      // Phase 2: Year badge drops in
+      tl.fromTo(badgeRef.current,
+        { y: -40, opacity: 0, scale: 0.5, rotateX: 90 },
+        { y: 0, opacity: 1, scale: 1, rotateX: 0, duration: 0.3, ease: 'back.out(2)' },
+        '-=0.1'
+      );
+
+      // Phase 2.5: Tagline types in character by character (now before logo)
+      if (taglineRef.current) {
+        tl.set(taglineRef.current, { opacity: 1, y: 0 });
+
+        const taglineChars = taglineRef.current.querySelectorAll('.tagline-char');
+        tl.fromTo(taglineChars,
+          { opacity: 0, display: 'none' },
+          {
+            opacity: 1,
+            display: 'inline',
+            duration: 0.01,
+            stagger: 0.02,
+            ease: 'none',
+          },
+          '-=0.1'
+        );
+      }
+
+      // Blinking cursor - blink a few times then disappear
+      const cursorBlink = gsap.to(cursorRef.current, {
+        opacity: 0,
+        repeat: 5,
+        yoyo: true,
+        duration: 0.4,
+        ease: 'steps(1)',
+        onComplete: () => {
+          gsap.to(cursorRef.current, { opacity: 0, duration: 0.2 });
+        },
+      });
+
+      // Phase 3: Logo - smooth reveal with clip-path (like a curtain sliding right)
+      if (logoMaskRef.current) {
+        tl.fromTo(logoMaskRef.current,
+          { clipPath: 'inset(0 100% 0 0)' },
+          {
+            clipPath: 'inset(0 0% 0 0)',
+            duration: 1.2,
+            ease: 'power3.inOut',
+          },
+          '-=0.2'
+        );
+      }
+
+      // Phase 4: Green swoosh draws itself
+      const swooshPaths = swooshRef.current?.querySelectorAll('path');
+      if (swooshPaths) {
+        swooshPaths.forEach((path) => {
+          const length = path.getTotalLength();
+          gsap.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+            opacity: 0,
+          });
+        });
+
+        tl.to(swooshPaths, {
+          strokeDashoffset: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: 'power2.inOut',
+        }, '-=0.6');
+      }
+
+      // Phase 6: Subtitle reveals word by word
+      const words = subtitleRef.current?.querySelectorAll('.hero-word');
+      if (words) {
+        tl.fromTo(words,
+          { opacity: 0, y: 8, filter: 'blur(3px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.2,
+            stagger: 0.02,
+          },
+          '-=0.4'
+        );
+      }
+
+      // Phase 7: CTAs slide up
+      tl.fromTo(ctaRef.current?.children || [],
+        { opacity: 0, y: 20, scale: 0.9 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.3, stagger: 0.08, ease: 'back.out(1.5)' },
+        '-=0.2'
+      );
+
+      // Phase 8: Pills pop in
+      const pills = pillsRef.current?.querySelectorAll('.hero-pill');
+      if (pills) {
+        tl.fromTo(pills,
+          { opacity: 0, scale: 0, y: 15 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.2, stagger: 0.05, ease: 'back.out(3)' },
+          '-=0.2'
+        );
+      }
+
+      // Phase 9: Side texts and bottom credits fade in
+      tl.fromTo([leftTextRef.current, rightTextRef.current],
+        { opacity: 0, x: (i) => i === 0 ? -20 : 20 },
+        { opacity: 1, x: 0, duration: 0.3, stagger: 0.05 },
+        '-=0.2'
+      );
+
+      tl.fromTo(bottomRef.current,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.3 },
+        '-=0.2'
+      );
+
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Split text into individual character spans
+  const logoText = 'etqan';
+  const logoChars = logoText.split('').map((char, i) => (
+    <span
+      key={i}
+      className="hero-char inline-block"
+      style={{ perspective: '600px' }}
+    >
+      {char}
+    </span>
+  ));
+
+  // Split subtitle into word spans
+  const subtitleText = t('hero_sub');
+  const subtitleWords = subtitleText.split(' ').map((word, i) => (
+    <span key={i} className="hero-word inline-block mr-[0.3em]">
+      {word}
+    </span>
+  ));
+
   return (
-    <section id="home" className="hero-section min-h-screen flex items-center justify-center hero-pattern relative overflow-hidden" style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundImage: `
-        radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.1) 0px, transparent 0%),
-        radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 0.1) 0px, transparent 50%),
-        radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 0.1) 0px, transparent 50%),
-        radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 0.1) 0px, transparent 50%),
-        radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 0.1) 0px, transparent 50%),
-        radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 0.1) 0px, transparent 50%),
-        radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 0.1) 0px, transparent 50%)
-      `,
-      position: 'relative',
-      overflow: 'hidden'
-    }}>
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-4 -left-4 w-72 h-72 bg-primary-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
-        <div className="absolute top-4 -right-4 w-72 h-72 bg-accent-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-primary-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '4s' }}></div>
+    <section ref={heroRef} id="home" className="hero-section min-h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/ChatGPT Image Mar 5, 2026, 01_06_40 AM.png')" }}
+      />
+
+      {/* Section divider line at top */}
+      <div className="absolute top-16 left-6 right-6 z-20">
+        <div
+          ref={lineRef}
+          className="relative w-full max-w-4xl mx-auto h-px bg-gray-700/50"
+          style={{ transform: 'scaleX(0)' }}
+        >
+          <div
+            className="hero-green-dot absolute left-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-neon-400"
+            style={{ boxShadow: '0 0 8px rgba(74, 222, 128, 0.5)', opacity: 0 }}
+          />
+        </div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10" style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 1.5rem',
-        position: 'relative',
-        zIndex: '10'
-      }}>
-        <motion.div
-          className="hero-content text-center max-w-5xl mx-auto"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Badge */}
-          <motion.div 
-            className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 mb-8 shadow-lg"
-            variants={itemVariants}
-          >
-            <Sparkles className="h-5 w-5 text-accent-600" />
-            <span className="text-sm font-semibold text-gray-700" style={{ fontFamily: locale === 'ar' ? 'Cairo, Tajawal, sans-serif' : undefined }}>{t('badge')}</span>
-          </motion.div>
+      {/* Left vertical text */}
+      <div
+        ref={leftTextRef}
+        className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-center gap-4"
+        style={{ opacity: 0 }}
+      >
+        <Sparkles className="h-4 w-4 text-gray-500" />
+        <span className="text-gray-500 text-xs font-mono tracking-[0.3em] uppercase" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+          {t('hero_pill_software')}
+        </span>
+        <Sparkles className="h-4 w-4 text-gray-500" />
+      </div>
 
-          {/* Main Heading */}
-          <motion.h1 
-            className="hero-title text-5xl md:text-7xl font-bold mb-6 leading-tight"
-            variants={itemVariants}
-            style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: '700', marginBottom: '1.5rem', lineHeight: '1.1' }}
-          >
-            <span className="gradient-text" style={{
-              background: 'linear-gradient(to right, #2563eb, #c026d3, #1d4ed8)',
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              color: 'transparent'
-            }}>{t('hero_title_1')}</span>
-            <br />
-            <span className="text-gray-800" style={{ color: '#1f2937' }}>{t('hero_title_2')}</span>
-          </motion.h1>
+      {/* Right vertical text */}
+      <div
+        ref={rightTextRef}
+        className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-center gap-4"
+        style={{ opacity: 0 }}
+      >
+        <Sparkles className="h-4 w-4 text-gray-500" />
+        <span className="text-gray-500 text-xs font-mono tracking-[0.3em] uppercase" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+          {t('hero_pill_ai')}
+        </span>
+        <div className="w-3 h-3 rounded-full border border-gray-600 flex items-center justify-center">
+          <div className="w-1 h-1 bg-neon-400 rounded-full" />
+        </div>
+      </div>
 
-          {/* Subtitle */}
-          <motion.p 
-            className="hero-subtitle text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed"
-            variants={itemVariants}
-            style={{ fontSize: '1.25rem', color: '#6b7280', marginBottom: '2rem', lineHeight: '1.6' }}
+      {/* Main content */}
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="hero-content text-center max-w-5xl mx-auto">
+          {/* Year badge */}
+          <div
+            ref={badgeRef}
+            className="inline-flex items-center bg-neon-500 rounded-lg px-5 py-1.5 mb-6"
+            style={{ opacity: 0 }}
           >
-            {t('hero_sub')}
-          </motion.p>
+            <span className="text-sm font-bold text-dark-700 tracking-wider font-mono">
+              2026
+            </span>
+          </div>
+
+          {/* Tagline - moved to top, bigger, more visible */}
+          <div
+            ref={taglineRef}
+            className="flex items-center justify-center gap-3 mb-8"
+            style={{ opacity: 0 }}
+          >
+            <span className="font-mono text-sm md:text-base tracking-[0.25em] uppercase text-gray-300">
+              {t('badge').split('').map((char, i) => (
+                <span key={i} className="tagline-char" style={{ opacity: 0 }}>
+                  {char}
+                </span>
+              ))}
+            </span>
+            <span ref={cursorRef} className="inline-block w-px h-5 bg-neon-400 ml-1" />
+          </div>
+
+          {/* Main Heading - smooth clip-path reveal */}
+          <h1 className="mb-6 leading-none relative" style={{ perspective: '1000px' }}>
+            <div
+              ref={logoMaskRef}
+              className="relative z-10"
+              style={{ clipPath: 'inset(0 100% 0 0)', zIndex: 20, position: 'relative' }}
+            >
+              <div
+                ref={logoRef}
+                className="font-display text-[5rem] md:text-[8rem] lg:text-[11rem] font-bold text-white/90"
+              >
+                {logoChars}
+              </div>
+            </div>
+
+            {/* Elegant underline flourish - below the text */}
+            <svg
+              ref={swooshRef}
+              className="relative left-1/2 -translate-x-1/2 w-[55%] md:w-[45%] pointer-events-none -mt-4 md:-mt-6"
+              viewBox="0 0 400 50"
+              fill="none"
+              style={{ height: 'auto' }}
+            >
+              {/* Main elegant brush stroke underline */}
+              <path
+                d="M10,25 C80,25 120,8 200,8 C280,8 340,30 390,18"
+                stroke="url(#swooshGradient)"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                fill="none"
+              />
+              {/* Subtle shadow stroke */}
+              <path
+                d="M30,30 C100,30 140,14 210,14 C280,14 330,34 380,24"
+                stroke="#22c55e"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                fill="none"
+                opacity="0.25"
+              />
+              <defs>
+                <linearGradient id="swooshGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
+                  <stop offset="30%" stopColor="#4ade80" stopOpacity="1" />
+                  <stop offset="70%" stopColor="#4ade80" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity="0.4" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </h1>
+
+          {/* Subtitle - word by word */}
+          <p
+            ref={subtitleRef}
+            className="text-base md:text-lg text-gray-400 mb-12 max-w-xl mx-auto leading-relaxed"
+          >
+            {subtitleWords}
+          </p>
 
           {/* CTA Buttons */}
-          <motion.div 
-            className="cta-buttons flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-            variants={itemVariants}
-            style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}
-          >
-            <motion.button 
+          <div ref={ctaRef} className="cta-buttons flex flex-col sm:flex-row gap-4 justify-center items-center mb-14">
+            <motion.button
               className="btn-primary flex items-center space-x-2 group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              style={{
-                background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
-                color: 'white',
-                padding: '12px 32px',
-                borderRadius: '8px',
-                fontWeight: '600',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                transition: 'all 0.2s'
-              }}
             >
               <span>{t('hero_btn_primary')}</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </motion.button>
-            <motion.button 
+            <motion.button
               className="btn-secondary flex items-center space-x-2"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              style={{
-                border: '2px solid #2563eb',
-                color: '#2563eb',
-                background: 'transparent',
-                padding: '10px 32px',
-                borderRadius: '8px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'all 0.2s'
-              }}
             >
               <span>{t('hero_btn_secondary')}</span>
             </motion.button>
-          </motion.div>
+          </div>
 
           {/* Feature Pills */}
-          <motion.div 
-            className="flex flex-wrap justify-center gap-4 md:gap-6"
-            variants={itemVariants}
-          >
-            <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 shadow-md">
-              <Code2 className="h-5 w-5 text-primary-600" />
-              <span className="text-sm font-medium text-gray-700">Custom Software</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 shadow-md">
-              <Brain className="h-5 w-5 text-accent-600" />
-              <span className="text-sm font-medium text-gray-700">AI & Machine Learning</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 shadow-md">
-              <Zap className="h-5 w-5 text-primary-600" />
-              <span className="text-sm font-medium text-gray-700">Process Automation</span>
-            </div>
-          </motion.div>
-        </motion.div>
+          <div ref={pillsRef} className="flex flex-wrap justify-center gap-4">
+            {[
+              { icon: <Code2 className="h-4 w-4 text-neon-400" />, key: 'hero_pill_software' },
+              { icon: <Brain className="h-4 w-4 text-neon-400" />, key: 'hero_pill_ai' },
+              { icon: <Zap className="h-4 w-4 text-neon-400" />, key: 'hero_pill_automation' },
+            ].map((pill, idx) => (
+              <div key={idx} className="hero-pill flex items-center space-x-2 bg-dark-300/50 backdrop-blur-sm border border-gray-700/40 rounded-full px-4 py-2" style={{ opacity: 0 }}>
+                {pill.icon}
+                <span className="text-xs font-mono text-gray-400 tracking-wider uppercase">{t(pill.key)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom right credits */}
+      <div
+        ref={bottomRef}
+        className="absolute bottom-10 right-6 md:right-10 z-20 hidden md:block"
+        style={{ opacity: 0 }}
+      >
+        <div className="flex items-center gap-3 text-gray-500">
+          <div className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center">
+            <ArrowRight className="h-3.5 w-3.5 -rotate-45" />
+          </div>
+          <div>
+            <p className="font-mono text-[10px] tracking-widest uppercase">{t('hero_pill_automation')}</p>
+          </div>
+        </div>
       </div>
 
       {/* Scroll Indicator */}
-      <motion.div 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+      <motion.div
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 2 }}
       >
-        <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-gray-400 rounded-full mt-2"></div>
+        <div className="w-6 h-10 border border-gray-600 rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-neon-400 rounded-full mt-2"></div>
         </div>
       </motion.div>
     </section>

@@ -11,7 +11,6 @@ import './styles.css';
 
 function App() {
   useEffect(() => {
-    // Smooth scrolling for anchor links
     const handleAnchorClick = (e) => {
       const target = e.target.closest('a[href^="#"]');
       if (target) {
@@ -32,7 +31,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App min-h-screen bg-brand-night dark:bg-brand-night transition-colors duration-300">
       <Header />
       <main>
         <Hero />
